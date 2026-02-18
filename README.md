@@ -1,8 +1,9 @@
 # simple-platformer
 
 ## How to run
-**Android:** Use Acode, then run `index.html`
-**PC:** Run `python -m http.server 8080` from the root directory, then open `http://localhost:8080` in your browser
+**Android:** You can use Acode, then run `index.html`  
+**PC:** Run `python -m http.server 8080` from the root directory, then open `http://localhost:8080` in your browser  
+
 
 ---
 
@@ -11,42 +12,38 @@
 ### Class interactions
 
 ```mermaid
-graph TD
-    main["main.js"]
-    LM["LevelManager"]
-    RM["ResourceManager"]
-    PCM["PlayerCameraMovement"]
-    CZT["CameraZoneTrigger"]
-    LSL["LevelSpaceLoader"]
-    PL["Player"]
+graph LR
+    subgraph init["Init"]
+        main1["main.js"] -->|new| LM1["LevelManager"]
+        main1 -->|new| PL1["Player"]
+        LM1 -->|new| RM1["ResourceManager"]
+        LM1 -->|new| PCM1["PlayerCameraMovement"]
+        LM1 -->|new| CZT1["CameraZoneTrigger"]
+        LM1 -->|new| LSL1["LevelSpaceLoader"]
+    end
+```
 
-    main -->|instantiates| LM
-    main -->|instantiates| PL
-    main -->|calls init, update, render| LM
-    main -->|calls update| PL
+```mermaid
+graph LR
+    subgraph load["Load Level"]
+        LM2["LevelManager"] -->|getLevelDefinition| RM2["ResourceManager"]
+        LM2 -->|setSpaceLevel| PCM2["PlayerCameraMovement"]
+        LM2 -->|setContext, registerZones| CZT2["CameraZoneTrigger"]
+        LM2 -->|load| LSL2["LevelSpaceLoader"]
+    end
+```
 
-    LM -->|instantiates| RM
-    LM -->|instantiates| PCM
-    LM -->|instantiates| CZT
-    LM -->|instantiates| LSL
-
-    LM -->|getLevelDefinition| RM
-    LM -->|_activateSpace → setSpaceLevel| PCM
-    LM -->|_activateSpace → setContext, registerZones| CZT
-    LM -->|_activateSpace → load| LSL
-    LM -->|update → update player| PCM
-    LM -->|update → check player| CZT
-
-    CZT -->|emit cameraScrollStart| LM
-    CZT -->|emit cameraScrollEnd| LM
-    CZT -->|emit zoneEnter| LM
-
-    LM -->|onScrollStart| PCM
-    LM -->|onScrollEnd| PCM
-    LM -->|onZoneEnter spaceTransition → _activateSpace| LM
-
-    LM -->|render → getOffset| PCM
-    LM -->|render player| PL
+```mermaid
+graph LR
+    subgraph loop["Game Loop"]
+        main3["main.js"] -->|update| PL3["Player"]
+        main3 -->|update + render| LM3["LevelManager"]
+        LM3 -->|check player| CZT3["CameraZoneTrigger"]
+        CZT3 -->|scrollStart, scrollEnd, zoneEnter| LM3
+        LM3 -->|onScrollStart, onScrollEnd| PCM3["PlayerCameraMovement"]
+        LM3 -->|getOffset| PCM3
+        LM3 -->|player.render with offset| PL3["Player"]
+    end
 ```
 
 ### Classes
