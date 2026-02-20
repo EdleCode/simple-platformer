@@ -1,4 +1,5 @@
 import SpaceLevel from './SpaceLevel.js';
+import { fetchJSON } from './utils.js';
 
 class LevelSpaceLoader {
     constructor() {
@@ -25,18 +26,11 @@ class LevelSpaceLoader {
 
     async _fetchSpace(spaceDef) {
         const { path, worldX, worldY } = spaceDef;
-
         if (this.cache.has(path)) {
             return this.cache.get(path);
         }
-
-        const response = await fetch(path);
-        if (!response.ok) {
-            throw new Error(`LevelSpaceLoader: can't load "${path}" (${response.status})`);
-        }
-
-        const data = await response.json();
-        const space = new SpaceLevel(data, worldX, worldY);
+        const data = await fetchJSON(path);
+        const space = await new SpaceLevel(data, worldX, worldY).init();
         this.cache.set(path, space);
         return space;
     }

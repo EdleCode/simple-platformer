@@ -1,0 +1,22 @@
+{
+    "0": {
+        "name": "empty",
+        "color": null
+    },
+    "1": {
+        "name": "ground",
+        "color": "#5a3e1b"
+    },
+    "2": {
+        "name": "wall",
+        "color": "#2e2e2e"
+    },
+    "3": {
+        "name": "grass",
+        "color": "#4caf50"
+    },
+    "4": {
+        "name": "water",
+        "color": "#1e90ff"
+    }
+}
