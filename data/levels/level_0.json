@@ -1,4 +1,5 @@
 {
+  "camHeightMotion": 1000,
   "startPosition": { "col": 6, "row": 9 },
   "spaces": [
     { "path": "/data/spaces/space_0.json", "cols": 80, "rows": 18, "tileSize": 32 },

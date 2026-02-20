@@ -6,6 +6,10 @@ const ctx    = canvas.getContext('2d');
 
 canvas.width  = window.innerWidth;
 canvas.height = window.innerHeight;
+
+canvas.style.position = 'fixed';
+canvas.style.bottom   = '0';
+canvas.style.left     = '0';
 canvas.style.backgroundColor = 'black';
 canvas.style.display         = 'block';
 document.body.style.margin   = '0';
@@ -36,11 +40,18 @@ async function startGame() {
     requestAnimationFrame(loop);
 
     window.addEventListener('resize', () => {
-      canvas.width  = window.innerWidth;
-      canvas.height = window.innerHeight;
-      levelManager.zoneTrigger.setContext(levelManager.activeSpace.bounds, canvas.width, canvas.height);
-      levelManager.cameraMovement.setSpaceLevel(levelManager.activeSpace.bounds, levelManager.levelDef.startPosition);
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const bounds = levelManager.spaceManager.activeSpace.bounds;
+        levelManager.zoneTrigger.setContext(bounds, canvas.width, canvas.height);
+        levelManager.cameraMovement.setSpaceLevel(
+            bounds,
+            levelManager.levelDef.startPosition,
+            null,
+            levelManager.levelDef.camHeightMotion ?? 0
+        );
     });
+
 }
 
 startGame().catch(err => {
